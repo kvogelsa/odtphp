@@ -12,6 +12,18 @@ This repository already includes the changes suggested by [Vikas Mahajan][1] and
 
 This project was initially started by Julien Pauli, Olivier Booklage, Vincent Brouté and published at [http://www.odtphp.com][2] (link leads to archived version of page, as it is not available any longer).
 
+### History II
+
+This fork was done due to the fact, that the contained pclzip.lib.php and the contained PclZipProxy.php try to create a tmp-folder within the source code directory. Using suexec or php-fpm under a user without writing-permissions to the source-dir caused permission-problems.
+
+To solve this, the 
+const TMP_DIR
+in PclZipProxy.php
+and
+define( 'PCLZIP_TEMPORARY_DIR', '' );
+in pclzip.lib.php had to be edited.
+
+
 ### Links:
 
 * http://sourceforge.net/projects/odtphp/ Sourceforge Project of the initial library (stale)
