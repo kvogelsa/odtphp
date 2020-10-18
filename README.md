@@ -23,9 +23,6 @@ and
 define( 'PCLZIP_TEMPORARY_DIR', '' );
 in pclzip.lib.php had to be edited.
 
-Consequently the option PCLZIP_OPT_REMOVE_ALL_PATH had to be added to $this->pclzip->add() in PclZipProxy.php.
-
-
 ### Links:
 
 * http://sourceforge.net/projects/odtphp/ Sourceforge Project of the initial library (stale)
