@@ -32,17 +32,6 @@ class PclZipProxy implements ZipInterface
      */
     public function __construct()
     {
-        
-      if (!is_array($config)) {
-          throw new PclZipProxyException('Configuration data must be provided as array');
-      }
-      if(!\array_key_exists('TMP_DIR',$config)){
-        const TMP_DIR = realpath($config['TMP_DIR'].'PclZiptmp');
-      }
-      else {
-        const TMP_DIR = realpath(sys_get_temp_dir());
-      }
-
         if (!class_exists('PclZip')) {
             throw new PclZipProxyException('PclZip class not loaded - PclZip library is required for using PclZipProxy');
         }
@@ -103,10 +92,10 @@ class PclZipProxy implements ZipInterface
         }
         $localname = preg_replace("/(?:\.|\/)*(.*)/", "\\1", $localname);
         $localpath = dirname($localname);
-        $tmpfilename = self::TMP_DIR . '/' . basename($localname);
+        $tmpfilename = sys_get_temp_dir().'PclZiptmp' . '/' . basename($localname);
         if (false !== file_put_contents($tmpfilename, $contents)) {
             $this->pclzip->delete(PCLZIP_OPT_BY_NAME, $localname);
-            $add = $this->pclzip->add($tmpfilename, PCLZIP_OPT_REMOVE_PATH, self::TMP_DIR, PCLZIP_OPT_ADD_PATH, $localpath);
+            $add = $this->pclzip->add($tmpfilename, PCLZIP_OPT_REMOVE_PATH, sys_get_temp_dir().'PclZiptmp', PCLZIP_OPT_ADD_PATH, $localpath);
             unlink($tmpfilename);
             if (!empty($add)) {
                 return true;
@@ -134,16 +123,16 @@ class PclZipProxy implements ZipInterface
         if (isset($localname)) {
             $localname = preg_replace("/(?:\.|\/)*(.*)/", "\\1", $localname);
             $localpath = dirname($localname);
-            $tmpfilename = self::TMP_DIR . '/' . basename($localname);
+            $tmpfilename = sys_get_temp_dir().'PclZiptmp' . '/' . basename($localname);
         } else {
             $localname = basename($filename);
-            $tmpfilename = self::TMP_DIR . '/' . $localname;
+            $tmpfilename = sys_get_temp_dir().'PclZiptmp' . '/' . $localname;
             $localpath = '';
         }
         if (file_exists($filename)) {
             copy($filename, $tmpfilename);
             $this->pclzip->delete(PCLZIP_OPT_BY_NAME, $localname);
-            $this->pclzip->add($tmpfilename, PCLZIP_OPT_REMOVE_PATH, self::TMP_DIR, PCLZIP_OPT_ADD_PATH, $localpath);
+            $this->pclzip->add($tmpfilename, PCLZIP_OPT_REMOVE_PATH, sys_get_temp_dir().'PclZiptmp', PCLZIP_OPT_ADD_PATH, $localpath);
             unlink($tmpfilename);
             return true;
         }
@@ -161,9 +150,9 @@ class PclZipProxy implements ZipInterface
         }
         $this->pclzip = $this->filename = null;
         $this->openned = false;
-        if (file_exists(self::TMP_DIR)) {
-            $this->_rrmdir(self::TMP_DIR);
-            rmdir(self::TMP_DIR);
+        if (file_exists(sys_get_temp_dir().'PclZiptmp')) {
+            $this->_rrmdir(sys_get_temp_dir().'PclZiptmp');
+            rmdir(sys_get_temp_dir().'PclZiptmp');
         }
         return true;
     }
