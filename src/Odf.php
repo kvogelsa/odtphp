@@ -62,6 +62,7 @@ class Odf
         if(!\array_key_exists('PATH_TO_TMP',$config)){
           $this->config['PATH_TO_TMP'] = sys_get_temp_dir();
         }
+        $this->config['PATH_TO_TMP'] = realpath($this->config['PATH_TO_TMP']);
         
         if (!class_exists($this->config['ZIP_PROXY'])) {
             throw new OdfException($this->config['ZIP_PROXY'] . ' class not found - check your php settings');
