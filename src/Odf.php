@@ -57,6 +57,12 @@ class Odf
                 $this->config[$configKey] = $configValue;
             }
         }
+        
+        //set tmp-dir properly if not defined
+        if(!\array_key_exists('PATH_TO_TMP',$config)){
+          $this->config['PATH_TO_TMP'] = sys_get_temp_dir();
+        }
+        
         if (!class_exists($this->config['ZIP_PROXY'])) {
             throw new OdfException($this->config['ZIP_PROXY'] . ' class not found - check your php settings');
         }
