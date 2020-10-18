@@ -21,7 +21,7 @@ use Odtphp\Exceptions\PclZipProxyException;
  */
 class PclZipProxy implements ZipInterface
 {
-    const TMP_DIR = './tmp';
+    
     protected $openned = false;
     protected $filename;
     protected $pclzip;
@@ -32,6 +32,17 @@ class PclZipProxy implements ZipInterface
      */
     public function __construct()
     {
+        
+      if (!is_array($config)) {
+          throw new PclZipProxyException('Configuration data must be provided as array');
+      }
+      if(!\array_key_exists('TMP_DIR',$config)){
+        const TMP_DIR = realpath($config['TMP_DIR'].'PclZiptmp');
+      }
+      else {
+        const TMP_DIR = realpath(sys_get_temp_dir());
+      }
+
         if (!class_exists('PclZip')) {
             throw new PclZipProxyException('PclZip class not loaded - PclZip library is required for using PclZipProxy');
         }
